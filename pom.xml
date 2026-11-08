@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.rulii</groupId>
+    <artifactId>rulii-bom</artifactId>
+    <version>2.2.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <name>rulii-bom</name>
+    <description>Bill of Materials for the rulii rule engine and its companion libraries</description>
+    <url>https://github.com/algox/rulii-bom</url>
+
+    <organization>
+        <name>rulii</name>
+        <url>http://www.rulii.org</url>
+    </organization>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/algox/rulii-bom/issues</url>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <!--
+        The BOM version follows the rulii core version it pins. When a companion library releases on its own,
+        the BOM re-releases with a fourth segment (2.2.0.1, 2.2.0.2, ...) against the same core.
+
+        Only rulii artifacts are managed here. Spring, Jakarta, Janino and GraalJS versions are deliberately
+        left to the consumer (or to the Spring Boot BOM), so importing this BOM never fights another one.
+    -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <rulii.version>2.2.0</rulii.version>
+        <rulii-spring.version>2.2.0</rulii-spring.version>
+        <rulii-bean-validation.version>1.0.0</rulii-bean-validation.version>
+        <rulii-explorer.version>1.1.0</rulii-explorer.version>
+
+        <central-publishing-plugin.version>0.11.0</central-publishing-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+        <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- Core rule engine -->
+            <dependency>
+                <groupId>org.rulii</groupId>
+                <artifactId>rulii</artifactId>
+                <version>${rulii.version}</version>
+            </dependency>
+
+            <!-- Spring / Spring Boot integration -->
+            <dependency>
+                <groupId>org.rulii</groupId>
+                <artifactId>rulii-spring</artifactId>
+                <version>${rulii-spring.version}</version>
+            </dependency>
+
+            <!-- Jakarta Bean Validation provider backed by rulii -->
+            <dependency>
+                <groupId>org.rulii</groupId>
+                <artifactId>rulii-bean-validation</artifactId>
+                <version>${rulii-bean-validation.version}</version>
+            </dependency>
+
+            <!-- Rule explorer: core model, web UI and Spring Boot starter (the demo is never published) -->
+            <dependency>
+                <groupId>org.rulii</groupId>
+                <artifactId>rulii-explorer-core</artifactId>
+                <version>${rulii-explorer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.rulii</groupId>
+                <artifactId>rulii-explorer-ui</artifactId>
+                <version>${rulii-explorer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.rulii</groupId>
+                <artifactId>rulii-explorer-spring-boot-starter</artifactId>
+                <version>${rulii-explorer.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <developers>
+        <developer>
+            <name>Max Arulananthan</name>
+            <email>max.arulananthan@rulii.org</email>
+            <organization>Algorithmx Inc.</organization>
+            <organizationUrl>http://www.algorithmx.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/algox/rulii-bom.git</connection>
+        <developerConnection>scm:git:https://github.com/algox/rulii-bom.git</developerConnection>
+        <url>https://github.com/algox/rulii-bom</url>
+    </scm>
+
+    <profiles>
+        <!--
+            Guard profile used by CI: declares every managed artifact as a dependency and resolves it, so a pinned
+            version that does not exist on Maven Central fails the build. Inactive for consumers that import the BOM.
+        -->
+        <profile>
+            <id>check-managed</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.rulii</groupId>
+                    <artifactId>rulii</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.rulii</groupId>
+                    <artifactId>rulii-spring</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.rulii</groupId>
+                    <artifactId>rulii-bean-validation</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.rulii</groupId>
+                    <artifactId>rulii-explorer-core</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.rulii</groupId>
+                    <artifactId>rulii-explorer-ui</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.rulii</groupId>
+                    <artifactId>rulii-explorer-spring-boot-starter</artifactId>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>${maven-dependency-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>resolve-managed</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>resolve</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>published</waitUntil>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
