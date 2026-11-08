@@ -1,6 +1,6 @@
 # Change log
 
-## [2.2.0] (unreleased)
+## [2.2.0]
 
 The first release. A Bill of Materials for the rulii family: import it once and declare the rulii artifacts
 without versions.
