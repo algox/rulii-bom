@@ -13,7 +13,7 @@
 
 ---
 
-**📖 rulii documentation at [rulii.com](https://rulii.com)** &middot; **🧪 Sample projects at [rulii-samples](https://github.com/algox/rulii-samples)**
+**📖 rulii documentation at [rulii.org](https://rulii.org)** &middot; **🧪 Sample projects at [rulii-samples](https://github.com/algox/rulii-samples)**
 
 ---
 
@@ -30,7 +30,7 @@ artifacts you use without a version.
 |---|---|---|
 | `org.rulii:rulii` | The rule engine | 2.2.0 |
 | `org.rulii:rulii-spring` | Spring and Spring Boot integration | 2.2.0 |
-| `org.rulii:rulii-bean-validation` | Jakarta Bean Validation provider backed by rulii | 1.0.0 |
+| `org.rulii:rulii-bean-validation` | Jakarta Bean Validation provider backed by rulii (not certified; see [specification coverage](https://rulii.org/bean-validation/spec-coverage/)) | 1.0.0 |
 | `org.rulii:rulii-explorer-core` | Rule explorer model and services | 1.1.0 |
 | `org.rulii:rulii-explorer-ui` | Rule explorer web UI | 1.1.0 |
 | `org.rulii:rulii-explorer-spring-boot-starter` | Spring Boot starter for the explorer | 1.1.0 |
